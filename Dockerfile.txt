@@ -1,0 +1,16 @@
+FROM centos:8
+
+RUN sed -i 's/mirrorlist/#mirrorlist/g' /etc/yum.repos.d/CentOS-Linux-* &&\
+    sed -i 's|#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g' /etc/yum.repos.d/CentOS-Linux-*
+
+RUN yum -y update
+RUN yum -y install httpd
+RUN echo "Hello Kolomolo" >> /var/www/html/index.html
+
+EXPOSE 80
+RUN echo "ServerName localhost" >> /etc/httpd/conf/httpd.conf
+
+COPY ./run.sh /
+RUN chmod -v +x /run.sh
+
+CMD ["/run.sh"]
